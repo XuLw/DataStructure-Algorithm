@@ -1,44 +1,39 @@
 package algorithm;
 
+import java.util.Arrays;
+
 public class AlgoTest {
 
-	public static final int N = 2000;
+	public static final int N = 50000;
 	public static final int RANGE_R = 20;
 	public static final int RANGE_L = 400;
 	public static final int MAX_OF_STUDENT_NUM = 2000;
 
-	public static final String AFTER_TEXT = "\n after : ";
+	public static final String CLASS_NAME = "algorithm.Sort";
 
-	public static void testSelectionSort() {
-		Integer[] arr = new Integer[N];
-		arr = SortTestHelper.generateRandomArray(N, RANGE_R, RANGE_L);
-		SortTestHelper.printArray(arr);
-		System.out.println(AFTER_TEXT);
-		Sort.selectSort(arr);
-		SortTestHelper.printArray(arr);
+	public AlgoTest() {
+		// Integer[] arr = SortTestHelper.generateNearlyOrderedArray(N, 100);
+		Integer[] arr = SortTestHelper.generateRandomArray(N, 0, 400);
+		handleSort(Sort.INSERT_SORT, arr.clone());
+		handleSort(Sort.INSERT_SORT_AD, arr.clone());
+		handleSort(Sort.BUBBLE_SORT, arr.clone());
+		// handleSort(Sort.BUBBLE_SORT_AD_V1, arr.clone());
+		// handleSort(Sort.BUBBLE_SORT_AD_V3, arr.clone());
+		handleSort(Sort.MERGE_SORT, arr.clone());
+		handleSort(Sort.SELECT_SORT, arr.clone());
 	}
 
-	public static void testBubbleSort() {
-		Integer[] arr = new Integer[N];
-		arr = SortTestHelper.generateRandomArray(N, RANGE_R, RANGE_L);
-		SortTestHelper.printArray(arr);
-		Sort.bubbleSort(arr);
-		SortTestHelper.printArray(arr);
+	private static <T extends Comparable> void handleSort(String sortName, T[] arr) {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				SortTestHelper.testSort(sortName, CLASS_NAME, arr);
+			}
+		}).start();
 	}
-	
+
 	public static void main(String[] args) {
-		// testSelectionSort();
-		// Student[] ss = Student.generateStudentArray(N, MAX_OF_STUDENT_NUM);
-//		Integer[] arr = SortTestHelper.generateRandomArray(N, RANGE_R, RANGE_L);
-//		Sort.insertSort(arr);
-//		SortTestHelper.printArray(arr);
-//		System.out.println(SortTestHelper.isSorted(arr));
-//		
-//		
-		testBubbleSort();
+		new AlgoTest();
 	}
-	
-	
+
 }
-
-
