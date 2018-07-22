@@ -17,6 +17,7 @@ public class Sort {
 	public static final String MERGE_SORT = "mergeSort";
 	public static final String MERGE_SORT_BTU = "mergeSortBTU";
 	public static final String QUICK_SORT = "quickSort";
+	public static final String QUICK_SORT_V2 = "quickSortV2";
 
 	public static final int MERGE_TO_INSERT = 15;
 
@@ -37,9 +38,7 @@ public class Sort {
 				}
 			}
 			// 选择第i小的数
-			T temp = arr[i];
-			arr[i] = arr[minIndex];
-			arr[minIndex] = temp;
+			swap(arr, i, minIndex);
 		}
 	}
 
@@ -55,9 +54,8 @@ public class Sort {
 
 			for (int j = i; j > 0 && arr[j].compareTo(arr[j - 1]) < 0; j--) {
 				// 右边比左边小，则交换
-				T temp = arr[j];
-				arr[j] = arr[j - 1];
-				arr[j - 1] = temp;
+				swap(arr, j, j - 1);
+
 			}
 
 		}
@@ -102,9 +100,7 @@ public class Sort {
 		for (int i = 0; i < arr.length - 1; i++) {
 			for (int j = 0; j < arr.length - 1 - i; j++) {
 				if (arr[j + 1].compareTo(arr[j]) < 0) {
-					T temp = arr[j + 1];
-					arr[j + 1] = arr[j];
-					arr[j] = temp;
+					swap(arr, j + 1, j);
 				}
 			}
 		}
@@ -123,9 +119,8 @@ public class Sort {
 				if (arr[j].compareTo(arr[indexOfMax]) > 0)
 					indexOfMax = j;
 			}
-			T temp = arr[indexOfMax];
-			arr[indexOfMax] = arr[arr.length - 1 - i];
-			arr[arr.length - 1 - i] = temp;
+			swap(arr, indexOfMax, arr.length - 1 - i);
+
 		}
 	}
 
@@ -143,9 +138,9 @@ public class Sort {
 			swapped = false;
 			for (int i = 1; i < n; i++)
 				if (arr[i - 1].compareTo(arr[i]) > 0) {
-					T temp = arr[i - 1];
-					arr[i - 1] = arr[i];
-					arr[i] = temp;
+
+					swap(arr, i - 1, i);
+
 					swapped = true;
 				}
 
@@ -167,9 +162,7 @@ public class Sort {
 			newn = 0;
 			for (int i = 1; i < n; i++)
 				if (arr[i - 1].compareTo(arr[i]) > 0) {
-					T temp = arr[i - 1];
-					arr[i - 1] = arr[i];
-					arr[i] = temp;
+					swap(arr, i - 1, i);
 					// 记录最后一次的交换位置,在此之后的元素在下一轮扫描中均不考虑
 					newn = i;
 				}
@@ -258,6 +251,9 @@ public class Sort {
 		}
 	}
 
+	/*
+	 * 最基本的快速排序
+	 */
 	public static <T extends Comparable> void quickSort(T[] arr) {
 		subQuickSort(arr, 0, arr.length - 1);
 
@@ -291,15 +287,70 @@ public class Sort {
 		for (int i = l + 1; i <= r; i++) {
 			if (arr[i].compareTo(temp) < 0) {
 				p++;
-				T t = arr[p];
-				arr[p] = arr[i];
-				arr[i] = t;
+				swap(arr, p, i);
 			}
 		}
-		T t = arr[l];
-		arr[l] = arr[p];
-		arr[p] = t;
+		swap(arr, l, p);
+
 		return p;
 	}
 
+	/*
+	 * 优化后的快速排序
+	 */
+	public static <T extends Comparable> void quickSortV2(T[] arr) {
+		subQuickSortV2(arr, 0, arr.length - 1);
+	}
+
+	private static <T extends Comparable> void subQuickSortV2(T[] arr, int l, int r) {
+
+		if (r - l <= 15) {
+			insertSort(arr, l, r);
+			return;
+		}
+
+		// if (r < l)
+		// return;
+
+		int p = patitionV2(arr, l, r);
+		subQuickSortV2(arr, l, p - 1);
+		subQuickSortV2(arr, p + 1, r);
+
+	}
+
+	private static <T extends Comparable> int patitionV2(T[] arr, int l, int r) {
+
+		int index = (int) (Math.random() * (r - l + 1) + l);
+		// 不要吝啬定义变量，
+		swap(arr, index, l);
+
+		T v = arr[l];
+
+		int i = l + 1, j = r;
+		while (true) {
+			while (i <= r && arr[i].compareTo(v) < 0)
+				i++;
+			while (j >= l + 1 && arr[j].compareTo(v) > 0)
+				j--;
+
+			if (i > j)
+				break;
+
+			swap(arr, i, j);
+
+			i++;
+			j--;
+		}
+
+		swap(arr, j, l);
+
+		return j;
+
+	}
+
+	private static <T extends Comparable> void swap(T[] arr, int p1, int p2) {
+		T temp = arr[p1];
+		arr[p1] = arr[p2];
+		arr[p2] = temp;
+	}
 }
