@@ -14,13 +14,13 @@ public class AlgoTest {
 	public AlgoTest() {
 		// Integer[] arr = SortTestHelper.generateNearlyOrderedArray(N, 100);
 		Integer[] arr = SortTestHelper.generateRandomArray(N, 0, 400);
-		handleSort(Sort.INSERT_SORT, arr.clone());
-		handleSort(Sort.INSERT_SORT_AD, arr.clone());
-		handleSort(Sort.BUBBLE_SORT, arr.clone());
-		// handleSort(Sort.BUBBLE_SORT_AD_V1, arr.clone());
-		// handleSort(Sort.BUBBLE_SORT_AD_V3, arr.clone());
-		handleSort(Sort.MERGE_SORT, arr.clone());
-		handleSort(Sort.SELECT_SORT, arr.clone());
+
+		String[] sorts = { Sort.QUICK_SORT, Sort.MERGE_SORT };
+
+		for (int i = 0; i < sorts.length; i++) {
+			handleSort(sorts[i], arr.clone());
+		}
+
 	}
 
 	private static <T extends Comparable> void handleSort(String sortName, T[] arr) {

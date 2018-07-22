@@ -4,6 +4,9 @@ import java.util.Arrays;
 
 public class Sort {
 
+	/*
+	 * 越界检查很重要
+	 */
 	public static final String SELECT_SORT = "selectSort";
 	public static final String INSERT_SORT = "insertSort";
 	public static final String INSERT_SORT_AD = "insertSortImproved";
@@ -12,6 +15,10 @@ public class Sort {
 	public static final String BUBBLE_SORT_AD_V2 = "bubbleSortImprovedV2";
 	public static final String BUBBLE_SORT_AD_V3 = "bubbleSortImprovedV3";
 	public static final String MERGE_SORT = "mergeSort";
+	public static final String MERGE_SORT_BTU = "mergeSortBTU";
+	public static final String QUICK_SORT = "quickSort";
+
+	public static final int MERGE_TO_INSERT = 15;
 
 	private Sort() {
 	}
@@ -53,6 +60,20 @@ public class Sort {
 				arr[j - 1] = temp;
 			}
 
+		}
+	}
+
+	/*
+	 * 对 arr[l...,r]进行排序
+	 */
+	public static <T extends Comparable> void insertSort(T[] arr, int l, int r) {
+		for (int i = l; i <= r; i++) {
+			int j = i;
+			T temp = arr[i];
+			for (; j - l > 0 && arr[j - 1].compareTo(temp) > 0; j--) {
+				arr[j] = arr[j - 1];
+			}
+			arr[j] = temp;
 		}
 	}
 
@@ -156,23 +177,57 @@ public class Sort {
 		} while (newn > 0);
 	}
 
+	/*
+	 * 递归归并排序
+	 */
 	public static <T extends Comparable> void mergeSort(T[] arr) {
 		subMergeSort(arr, 0, arr.length - 1);
+		// SortTestHelper.printArray(arr);
+	}
+
+	/*
+	 * 自底向上归并排序
+	 */
+	public static <T extends Comparable> void mergeSortBTU(T[] arr) {
+
+		for (int size = 1; size <= arr.length; size += size) {
+			for (int i = 0; i + size < arr.length; i = size + size + i) {
+
+				// 因为当数量小到一定程度时，插入排序会比归并排序更加快
+				// MERGE_TO_INSERT 这个值的不同，效果也不同
+				if (size <= 15) {
+					insertSort(arr, i, Math.min(i + size + size - 1, arr.length - 1));
+					continue;
+				}
+				if (arr[i + size - 1].compareTo(arr[Math.min(i + size, arr.length - 1)]) > 0)
+					merge(arr, i, i + size - 1, Math.min(i + size + size - 1, arr.length - 1));
+			}
+		}
 	}
 
 	// 递归使用归并排序,对arr[l...r]的范围进行排序
 	private static <T extends Comparable> void subMergeSort(T[] arr, int l, int r) {
-		// 已经排完
-		if (l >= r)
+		// v1 已经排完
+		// if (l >= r)
+		// return;
+
+		// v2 因为当数量小到一定程度时，插入排序会比归并排序更加快
+		// MERGE_TO_INSERT 这个值的不同，效果也不同
+		if (r - l <= MERGE_TO_INSERT) {
+			insertSort(arr, l, r);
 			return;
+		}
 
 		// 防止两个整形相加越界
 		long sum = r + l;
-		int middle = (int) (sum / 2);
+		int mid = (int) (sum / 2);
 
-		subMergeSort(arr, l, middle);
-		subMergeSort(arr, middle + 1, r);
-		merge(arr, l, middle, r);
+		subMergeSort(arr, l, mid);
+		subMergeSort(arr, mid + 1, r);
+
+		// 优化 如果已经有序则不需要进行合并
+		if (arr[mid].compareTo(arr[mid + 1]) > 0)
+			merge(arr, l, mid, r);
 	}
 
 	// 将arr[l...mid]和arr[mid+1...r]两部分进行归并
@@ -201,8 +256,50 @@ public class Sort {
 				j++;
 			}
 		}
-
-		
-        
 	}
+
+	public static <T extends Comparable> void quickSort(T[] arr) {
+		subQuickSort(arr, 0, arr.length - 1);
+
+	}
+
+	private static <T extends Comparable> void subQuickSort(T[] arr, int l, int r) {
+
+		if (l >= r)
+			return;
+
+		int p = patition(arr, l, r);
+		subQuickSort(arr, l, p - 1);
+		subQuickSort(arr, p + 1, r);
+	}
+
+	/*
+	 * 对 T[l..r]进行排序
+	 * 
+	 * 快速排序是不稳定的
+	 * 
+	 * arr[l...p - 1] < arr[l] < arr[p+1...r]
+	 * 
+	 * 想法就是第一个先不动，然后在后续的便利中，划分出来两个数组，其中q指向小于arr[l]数组的最后一个，
+	 * 
+	 * 只需要在划分完之后，交换一下 arr[l] 和 arr[p];
+	 */
+	private static <T extends Comparable> int patition(T[] arr, int l, int r) {
+
+		int p = l;
+		T temp = arr[l];
+		for (int i = l + 1; i <= r; i++) {
+			if (arr[i].compareTo(temp) < 0) {
+				p++;
+				T t = arr[p];
+				arr[p] = arr[i];
+				arr[i] = t;
+			}
+		}
+		T t = arr[l];
+		arr[l] = arr[p];
+		arr[p] = t;
+		return p;
+	}
+
 }
