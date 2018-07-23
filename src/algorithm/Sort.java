@@ -18,6 +18,7 @@ public class Sort {
 	public static final String MERGE_SORT_BTU = "mergeSortBTU";
 	public static final String QUICK_SORT = "quickSort";
 	public static final String QUICK_SORT_V2 = "quickSortV2";
+	public static final String QUICK_SORT_V3 = "quickSortV3";
 
 	public static final int MERGE_TO_INSERT = 15;
 
@@ -253,6 +254,8 @@ public class Sort {
 
 	/*
 	 * 最基本的快速排序
+	 * 
+	 * 当数据量为1000000时会发生溢出
 	 */
 	public static <T extends Comparable> void quickSort(T[] arr) {
 		subQuickSort(arr, 0, arr.length - 1);
@@ -320,9 +323,8 @@ public class Sort {
 
 	private static <T extends Comparable> int patitionV2(T[] arr, int l, int r) {
 
-		int index = (int) (Math.random() * (r - l + 1) + l);
 		// 不要吝啬定义变量，
-		swap(arr, index, l);
+		swap(arr, (int) (Math.random() * (r - l + 1) + l), l);
 
 		T v = arr[l];
 
@@ -348,6 +350,50 @@ public class Sort {
 
 	}
 
+	/*
+	 * 适用于优化处理存在大量重复元素的集合
+	 * 
+	 * 同时处理普通的集合性能也不会退化到O(n^2)
+	 */
+	public static <T extends Comparable> void quickSortV3(T[] arr) {
+		subQuickSortV3(arr, 0, arr.length - 1);
+	}
+
+	/*
+	 * arr[l+1..lt) < arr[lt..i] = v < arr[gt...r]
+	 */
+	private static <T extends Comparable> void subQuickSortV3(T[] arr, int l, int r) {
+
+		if (r - l <= 15) {
+			insertSort(arr, l, r);
+			return;
+		}
+
+		swap(arr, l, (int) (Math.random() * (r - l + 1) + l));
+		T v = arr[l];
+
+		int lt = l, i = l + 1, gt = r + 1;
+
+		// patiton
+		while (i < gt) {
+			if (arr[i].compareTo(v) > 0)
+				swap(arr, i, --gt);
+			else if (arr[i].compareTo(v) < 0)
+				swap(arr, i++, ++lt);
+			else
+				i++;
+		}
+
+		swap(arr, l, lt);
+
+		// 因为 lt 交换了，所以 arr[lt] == v, 所以时lt - 1
+		subQuickSortV3(arr, l, lt - 1);
+		subQuickSortV3(arr, gt, r);
+	}
+
+	/*
+	 * 交换函数
+	 */
 	private static <T extends Comparable> void swap(T[] arr, int p1, int p2) {
 		T temp = arr[p1];
 		arr[p1] = arr[p2];
