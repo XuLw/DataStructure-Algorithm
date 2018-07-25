@@ -13,9 +13,9 @@ public class AlgoTest {
 
 	public AlgoTest() {
 		// Integer[] arr = SortTestHelper.generateNearlyOrderedArray(N, 100);
-		Integer[] arr = SortTestHelper.generateRandomArray(N, 0, 10);
+		Integer[] arr = SortTestHelper.generateRandomArray(N, 0, 100);
 
-		String[] sorts = { Sort.QUICK_SORT_V3, Sort.MERGE_SORT };
+		String[] sorts = { Sort.HEAPSORT, Sort.HEAPSORT_V1, Sort.HEAPSORT_V2 };
 
 		for (int i = 0; i < sorts.length; i++) {
 			handleSort(sorts[i], arr.clone());

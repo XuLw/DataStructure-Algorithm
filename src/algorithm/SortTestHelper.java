@@ -52,10 +52,35 @@ public class SortTestHelper {
 	 * ²âÊÔÊı×éÊÇ·ñÅÅºÃĞò
 	 */
 	public static <T extends Comparable> boolean isSorted(T[] arr) {
-		for (int i = 0; i < arr.length - 1; i++) {
-			if (arr[i].compareTo(arr[i + 1]) > 0)
-				return false;
-		}
+
+		int ri, rj, flag = 0;
+		do {
+			ri = (int) (Math.random() * arr.length - 1);
+			rj = (int) (Math.random() * arr.length - 1);
+
+			if (ri == rj || arr[ri].compareTo(arr[rj]) == 0)
+				continue;
+
+			if ((ri > rj && arr[ri].compareTo(arr[rj]) > 0) || (ri < rj && arr[ri].compareTo(arr[rj]) < 0)) {
+				flag = 1;
+				break;
+			} else {
+				flag = -1;
+				break;
+			}
+		} while (true);
+
+		// ÉıĞò
+		if (flag == 1)
+			for (int i = 0; i < arr.length - 1; i++) {
+				if (arr[i].compareTo(arr[i + 1]) > 0)
+					return false;
+			}
+		// ½µĞò
+		else
+			for (int i = 0; i < arr.length - 1; i++)
+				if (arr[i].compareTo(arr[i + 1]) < 0)
+					return false;
 		return true;
 	}
 

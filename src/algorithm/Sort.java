@@ -4,9 +4,6 @@ import java.util.Arrays;
 
 public class Sort {
 
-	/*
-	 * 越界检查很重要
-	 */
 	public static final String SELECT_SORT = "selectSort";
 	public static final String INSERT_SORT = "insertSort";
 	public static final String INSERT_SORT_AD = "insertSortImproved";
@@ -19,11 +16,16 @@ public class Sort {
 	public static final String QUICK_SORT = "quickSort";
 	public static final String QUICK_SORT_V2 = "quickSortV2";
 	public static final String QUICK_SORT_V3 = "quickSortV3";
+	public static final String HEAPSORT_V1 = "heapSortV1";
+	public static final String HEAPSORT_V2 = "heapSortV2";
+	public static final String HEAPSORT = "heapSort";
 
 	public static final int MERGE_TO_INSERT = 15;
 
 	private Sort() {
 	}
+
+	/**************** 选择排序 ******************/
 
 	/*
 	 * 选择排序
@@ -42,6 +44,8 @@ public class Sort {
 			swap(arr, i, minIndex);
 		}
 	}
+
+	/**************** 插入排序 ******************/
 
 	/*
 	 * 插入排序
@@ -91,6 +95,8 @@ public class Sort {
 			arr[j] = temp;
 		}
 	}
+
+	/**************** 冒泡排序 ******************/
 
 	/*
 	 * 基本冒泡排序
@@ -170,6 +176,8 @@ public class Sort {
 			n = newn;
 		} while (newn > 0);
 	}
+
+	/**************** 归并排序 ******************/
 
 	/*
 	 * 递归归并排序
@@ -251,6 +259,8 @@ public class Sort {
 			}
 		}
 	}
+
+	/**************** 快速排序 ******************/
 
 	/*
 	 * 最基本的快速排序
@@ -391,6 +401,72 @@ public class Sort {
 		subQuickSortV3(arr, gt, r);
 	}
 
+	/**************** 堆排序 ******************/
+
+	/*
+	 * 通过insert (shiftUp)函数来创建最大堆
+	 */
+	public static <T extends Comparable> void heapSortV1(T[] arr) {
+		MaxHeap<T> heap = new MaxHeap<>(arr.length);
+		for (int i = 0; i < arr.length; i++) {
+			heap.insert(arr[i]);
+		}
+
+		System.out.println();
+		for (int i = 0; i < arr.length; i++) {
+			arr[i] = heap.extractMax();
+		}
+	}
+
+	/*
+	 * 通过数组创建最大堆 shiftDown
+	 */
+	public static <T extends Comparable> void heapSortV2(T[] arr) {
+		MaxHeap<T> heap = new MaxHeap<>(arr);
+
+		for (int i = 0; i < arr.length; i++) {
+			arr[i] = heap.extractMax();
+		}
+	}
+
+	/*
+	 * 原地堆排序
+	 */
+	public static <T extends Comparable> void heapSort(T[] arr) {
+		int n = arr.length;
+		// 形成最大堆
+		for (int i = (n - 1) / 2; i >= 0; i--) {
+			localShiftDown(arr, n - 1, i);
+		}
+
+		// 排序
+		for (int i = n - 1; i > 0; i--) {
+			swap(arr, 0, i);
+			localShiftDown(arr, i - 1, 0);
+		}
+
+	}
+
+	// 对 arr[0...n] 进行shiftDown 操作
+	private static <T extends Comparable> void localShiftDown(T[] arr, int n, int k) {
+
+		T temp = arr[k];
+		while (k * 2 + 1 <= n) {
+
+			int j = 2 * k + 1;
+
+			if (j + 1 <= n && arr[j].compareTo(arr[j + 1]) < 0)
+				j++;
+
+			if (temp.compareTo(arr[j]) > 0)
+				break;
+
+			arr[k] = arr[j];
+			k = j;
+		}
+		arr[k] = temp;
+	}
+
 	/*
 	 * 交换函数
 	 */
@@ -399,4 +475,5 @@ public class Sort {
 		arr[p1] = arr[p2];
 		arr[p2] = temp;
 	}
+	
 }
