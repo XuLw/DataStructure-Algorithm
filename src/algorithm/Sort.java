@@ -2,6 +2,8 @@ package algorithm;
 
 import java.util.Arrays;
 
+import dataStructure.MaxHeap;
+
 public class Sort {
 
 	public static final String SELECT_SORT = "selectSort";
@@ -221,8 +223,8 @@ public class Sort {
 		}
 
 		// 防止两个整形相加越界
-		long sum = r + l;
-		int mid = (int) (sum / 2);
+		// int mid = (int) (l + r / 2);
+		int mid = l + (r - l) / 2;
 
 		subMergeSort(arr, l, mid);
 		subMergeSort(arr, mid + 1, r);
@@ -467,6 +469,8 @@ public class Sort {
 		arr[k] = temp;
 	}
 
+	/***************** 索引最大堆 *********************/
+
 	/*
 	 * 交换函数
 	 */
@@ -475,5 +479,5 @@ public class Sort {
 		arr[p1] = arr[p2];
 		arr[p2] = temp;
 	}
-	
+
 }

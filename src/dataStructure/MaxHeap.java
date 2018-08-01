@@ -1,4 +1,4 @@
-package algorithm;
+package dataStructure;
 
 /*
  * 最大堆定义  ：  1.是一颗完全二叉树  2.父节点比所有的子节点都大
@@ -84,10 +84,12 @@ public class MaxHeap<T extends Comparable> {
 	 * 
 	 */
 	private void shiftUp(int k) {
-		while (k > 1 && data[k].compareTo(data[k / 2]) > 0) {
-			swap(k, k / 2);
+		T temp = data[k];
+		while (k > 1 && temp.compareTo(data[k / 2]) > 0) {
+			data[k] = data[k / 2];
 			k /= 2;
 		}
+		data[k] = temp; 
 	}
 
 	/*

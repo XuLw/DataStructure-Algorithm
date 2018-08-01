@@ -1,6 +1,8 @@
 # DataStructure-Algorithm
 学习基本算法和数据结构的使用
 
+## 增加递归、非递归二分查找法，和测试用的SearchTestHelper
+
 ## 增加最大堆排序
 
 ## 增加归并排序、快速排序、插入排序

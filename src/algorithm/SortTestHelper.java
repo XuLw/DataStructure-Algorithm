@@ -49,7 +49,7 @@ public class SortTestHelper {
 	}
 
 	/*
-	 * 测试数组是否排好序
+	 * 测试数组是否排好序 包括递增、递减
 	 */
 	public static <T extends Comparable> boolean isSorted(T[] arr) {
 
