@@ -1,7 +1,7 @@
 # DataStructure-Algorithm
 学习基本算法和数据结构的使用
 
-##具体使用说明
+## 具体使用说明
 
 程序入口在AlgoTest.java 
 程序开头定义了一些测试数据相关的常量
